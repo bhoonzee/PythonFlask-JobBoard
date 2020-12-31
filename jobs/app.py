@@ -7,6 +7,7 @@ def open_connection():
 	connection = getattr(g, '_connection', None)
 	if connection is None:
 		connection = g._connection = sqlite3.connect(PATH)
+		connection.row_factory = sqlite3.Row
 		return connection
 	
 @app.teardown_appcontext
@@ -16,7 +17,7 @@ def close_connection(exception):
         connection.close()
 		
 def execute_sql(sql, values = (), commit = False, single = False):
-	cursor = open_connection().execute(sql, values)
+	cursor = open_connection.execute(sql, values)
 	if commit is True:
 		results = connection.commit()
 @app.route('/')
