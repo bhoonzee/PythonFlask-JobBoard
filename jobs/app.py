@@ -16,7 +16,7 @@ def close_connection(exception):
     if connection is not None:
         connection.close()
 		
-def execute_sql(sql, values = (), commit = False, single = False):
+def execute_sql(sql= 'SELECT job.id, job.title, job.description, job.salary, employer.id as employer_id, employer.name as employer_name FROM job JOIN employer ON employer.id = job.employer_id', values = (), commit = False, single = False):
 	connection = open_connection()
 	cursor = connection.execute(sql, values)
 	if commit is True:
@@ -24,9 +24,10 @@ def execute_sql(sql, values = (), commit = False, single = False):
 	else:
 		results = cursor.fetchone() if single else cursor.fetchall()
 	cursor.close()
+	jobs = results
 	return results
 @app.route('/')
 @app.route('/jobs')
 def jobs():
-  return render_template('index.html')
+  return render_template('index.html',jobs=jobs)
  
